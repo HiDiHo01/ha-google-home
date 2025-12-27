@@ -14,6 +14,9 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v4
 
+      - name: Install JPEG library
+        run: sudo apt-get update && sudo apt-get install -y libjpeg-dev
+
       - name: Prepare and install deps
         uses: ./.github/actions/install-deps
 
