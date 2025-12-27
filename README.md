@@ -218,13 +218,15 @@ service: google_home.refresh_devices
 
 ### Prerequisites
 
-Use Home Assistant v2023.2.0 or above.
+Use Home Assistant v2024.11.0 or above.
 
 ### Google Account security
 
 This integration uses your google account username and app password.
 See [2 Factor Authentication](#2-factor-authentication--app-passwords) section for tips
-how to setup app password. However, we strongly recommend protection your main
+how to setup app password. If you have created a passkey for your Google Account you must obtain the master token for your account as described in the [corresponding section](#master-token).
+
+However, we strongly recommend protection your main
 google account by not exposing it to the Home Assistant for automation purposes.
 We encourage you to create a separate Google account and add it to your Google Home.
 Your second account would not have access to anything other than Google Home, so even if it
@@ -235,11 +237,13 @@ See more discussion [here](https://github.com/leikoilja/ha-google-home/issues/12
 
 Due to authentication issues with google credentials alone it may be required to get the master token separately and provide it during the setup process. This can be done using [this script](https://gist.github.com/rithvikvibhu/952f83ea656c6782fbd0f1645059055d) or [glocaltokens](https://github.com/leikoilja/glocaltokens#quickstart) package.
 
-Since there are several issues getting the token reliable on different environments, you can use a docker container which was created solely for this use: <https://hub.docker.com/r/breph/ha-google-home_get-token>. If you choose to use this container, run the following command:
+Since there are several issues getting the token reliable on different environments, you can use a community created [docker image](https://hub.docker.com/r/breph/ha-google-home_get-token) which was created solely for helping to get a master token reliably. If you choose to use this docker container, run the following command:
 
 ```
 $ docker run --rm -it breph/ha-google-home_get-token
 ```
+
+You fill find more detailed instructions on how to run the docker container [here](https://github.com/leikoilja/ha-google-home/issues/890#issuecomment-2515002294).
 
 ### HACS Installation
 
@@ -457,5 +461,5 @@ If you want to translate the project to your own language, follow the [Localizat
 [releases]: https://github.com/leikoilja/ha-google-home/releases
 [workflow-shield]: https://img.shields.io/github/actions/workflow/status/leikoilja/ha-google-home/linting.yaml?branch=master&style=for-the-badge
 [workflow]: https://github.com/leikoilja/ha-google-home/actions
-[installs-shield]: https://img.shields.io/endpoint?style=for-the-badge&url=https%3A%2F%2Frunkit.io%2Fkapji%2Fgoogle-home-installs-for-shield-io%2F3.0.0
+[installs-shield]: https://img.shields.io/badge/dynamic/json?style=for-the-badge&color=blue&label=installs&cacheSeconds=3600&url=https://analytics.home-assistant.io/custom_integrations.json&query=$.google_home.total
 [installs]: https://analytics.home-assistant.io/custom_integrations.json
