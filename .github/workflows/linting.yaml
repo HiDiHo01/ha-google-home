@@ -12,15 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13' # Use 3.13 for PyO3 compatibility
-
       - name: Prepare and install deps
         uses: ./.github/actions/install-deps
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         name: Cache pre-commit hooks
         with:
           path: ~/.cache/pre-commit/
