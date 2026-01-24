@@ -73,6 +73,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: GoogleHomeConfigEntry) -
         config_entry=entry,
         update_method=glocaltokens_client.update_google_devices_information,
         update_interval=timedelta(seconds=update_interval),
+        config_entry=entry,
     )
 
     await coordinator.async_config_entry_first_refresh()
