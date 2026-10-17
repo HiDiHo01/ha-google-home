@@ -1,20 +1,15 @@
 #!/usr/bin/env python3
 """Update manifest.json and create new Github Release."""
 
-from __future__ import annotations
-
 from importlib.metadata import version as package_version
 import json
 import os
 import sys
-from typing import TYPE_CHECKING
 
 from github import Auth, Github, InputGitTreeElement
 from github.ContentFile import ContentFile
-
-if TYPE_CHECKING:
-    from github.GitRelease import GitRelease
-    from github.Repository import Repository
+from github.GitRelease import GitRelease
+from github.Repository import Repository
 
 
 def main() -> int:
@@ -28,7 +23,7 @@ def main() -> int:
     if not release.draft:
         print("The latest release is not a draft!")
         return 1
-    version = release.title.split()[-1].lstrip("v")
+    version = release.name.split()[-1].lstrip("v")
     update_manifests(repo, version)
     publish_release(release)
     return 0
@@ -55,9 +50,6 @@ def update_manifests(repo: Repository, version: str) -> None:
 
     branch = repo.get_branch("master")
 
-    # Disable branch protection before commit
-    branch.remove_admin_enforcement()
-
     # Create commit
     elements = []
     for file_path, content in [
@@ -77,15 +69,12 @@ def update_manifests(repo: Repository, version: str) -> None:
     master_ref = repo.get_git_ref(f"heads/{branch.name}")
     master_ref.edit(sha=commit.sha)
 
-    # Re-enable branch protection
-    branch.set_admin_enforcement()
-
 
 def publish_release(release: GitRelease) -> None:
     """Publish draft release."""
     print("Publishing new release...")
     release.update_release(
-        name=release.title.split()[-1],
+        name=release.name.split()[-1],
         message=release.body,
         draft=False,
     )

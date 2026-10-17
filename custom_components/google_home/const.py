@@ -1,7 +1,5 @@
 """Constants for Google Home."""
 
-from __future__ import annotations
-
 from typing import Final
 
 from homeassistant.util.dt import DATE_STR_FORMAT
@@ -15,13 +13,13 @@ MANUFACTURER: Final = "Google Home"
 ATTRIBUTION: Final = "json"
 ISSUE_URL: Final = "https://github.com/leikoilja/ha-google-home/issues"
 CONF_UPDATE_INTERVAL: Final = "update_interval"
+# Addresses of devices that mDNS can't find, for example on another network
+CONF_KNOWN_HOSTS: Final = "known_hosts"
 
 DATA_CLIENT: Final = "client"
 DATA_COORDINATOR: Final = "coordinator"
 
 ALARM_AND_TIMER_ID_LENGTH: Final = 42
-
-MAX_PASSWORD_LENGTH: Final = 100
 
 # Icons
 ICON_TOKEN: Final = "mdi:form-textbox-password"
@@ -37,12 +35,15 @@ ICON_ALARM_VOLUME_OFF: Final = "mdi:volume-off"
 SENSOR: Final = "sensor"
 SWITCH: Final = "switch"
 NUMBER: Final = "number"
-PLATFORMS: Final = [SENSOR, SWITCH, NUMBER]
+BUTTON: Final = "button"
+PLATFORMS: Final = [SENSOR, SWITCH, NUMBER, BUTTON]
 
 # Services
 SERVICE_REBOOT: Final = "reboot_device"
 SERVICE_DELETE_ALARM: Final = "delete_alarm"
 SERVICE_DELETE_TIMER: Final = "delete_timer"
+SERVICE_DELETE_ALL_ALARMS: Final = "delete_all_alarms"
+SERVICE_DELETE_ALL_TIMERS: Final = "delete_all_timers"
 SERVICE_REFRESH: Final = "refresh_devices"
 SERVICE_ATTR_ALARM_ID: Final = "alarm_id"
 SERVICE_ATTR_SKIP_REFRESH: Final = "skip_refresh"
@@ -53,9 +54,12 @@ CONF_ANDROID_ID: Final = "android_id"
 CONF_USERNAME: Final = "username"
 CONF_PASSWORD: Final = "password"
 CONF_MASTER_TOKEN: Final = "master_token"
+CONF_OAUTH_TOKEN: Final = "oauth_token"
 
 # Defaults
-DEFAULT_NAME: Final = "Google Home"
+# Titles of entries whose Google account is unknown, by how they signed in
+MASTER_TOKEN_TITLE: Final = f"{MANUFACTURER} (master_token)"
+BROWSER_TITLE: Final = f"{MANUFACTURER} (browser)"
 GOOGLE_HOME_ALARM_DEFAULT_VALUE: Final = 0
 
 LABEL_ALARMS: Final = "alarms"
@@ -64,6 +68,7 @@ LABEL_AVAILABLE: Final = "available"
 LABEL_TIMERS: Final = "timers"
 LABEL_DEVICE: Final = "device"
 LABEL_DO_NOT_DISTURB: Final = "Do Not Disturb"
+LABEL_REBOOT: Final = "reboot"
 
 # DEVICE PORT
 PORT: Final = 8443
@@ -74,6 +79,8 @@ API_ENDPOINT_ALARM_DELETE: Final = "setup/assistant/alarms/delete"
 API_ENDPOINT_ALARM_VOLUME: Final = "setup/assistant/alarms/volume"
 API_ENDPOINT_REBOOT: Final = "setup/reboot"
 API_ENDPOINT_DO_NOT_DISTURB: Final = "setup/assistant/notifications"
+# Answers without a local auth token, so it identifies a known host
+API_ENDPOINT_EUREKA_INFO: Final = "setup/eureka_info?params=name,device_info"
 
 # HEADERS
 HEADER_CAST_LOCAL_AUTH: Final = "cast-local-authorization-token"
@@ -88,6 +95,9 @@ DATETIME_STR_FORMAT: Final = f"{DATE_STR_FORMAT} {TIME_STR_FORMAT}"
 # Access token only lives about 1 hour
 # Update often to fetch timers in timely manner
 UPDATE_INTERVAL: Final = 180  # sec
+# While a device has no IP address, fetch Google's device list again every this
+# many updates. It's a request to Google, so not on every update.
+FETCH_DEVICES_EVERY: Final = 10
 
 # JSON parameter values when retrieving information from devices
 JSON_ALARM: Final = "alarm"
