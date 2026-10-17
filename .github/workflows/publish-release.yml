@@ -3,19 +3,40 @@ name: Publish new release
 on:
   workflow_dispatch:
 
+# Writes go through a GitHub App installation token, which can bypass branch protection.
+permissions:
+  contents: read
+
+env:
+  PYTHON_VERSION: "3.14"
+
 jobs:
   publish:
     name: Update manifest and publish
+    if: github.repository_owner == 'leikoilja'
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Generate app token
+        id: app-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.APP_CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          permission-contents: write
 
       - name: Prepare and install deps
         uses: ./.github/actions/install-deps
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Run script
         run: |
           uv run python script/publish_release.py
         env:
-          GITHUB_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
